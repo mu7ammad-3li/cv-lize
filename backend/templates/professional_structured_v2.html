@@ -1,0 +1,389 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <style>
+            /* Define Page Size and Margins */
+            @page {
+                size: A4;
+                margin: 1.2cm 1.4cm;
+            }
+
+            @page :first {
+                margin-top: 1cm;
+            }
+
+            /* Base Typography - ATS-Friendly Fonts that work with WeasyPrint */
+            body {
+                font-family: Arial, Helvetica, sans-serif;
+                color: #1a1a1a;
+                line-height: 1.4;
+                font-size: 10.5pt;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Header Section - Compact */
+            .header {
+                text-align: center;
+                margin-bottom: 0.5rem;
+                border-bottom: 2px solid #1a1a1a;
+                padding-bottom: 0.4rem;
+            }
+
+            .name {
+                font-size: 20pt;
+                font-weight: bold;
+                letter-spacing: -0.01em;
+                margin-bottom: 0.15rem;
+                color: #000;
+            }
+
+            .title {
+                font-size: 10pt;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: #444;
+                margin-bottom: 0.25rem;
+                font-weight: normal;
+            }
+
+            /* Contact Info Bar - Using Unicode symbols instead of SVG */
+            .contact-info {
+                text-align: center;
+                color: #555;
+                font-size: 9pt;
+                margin-top: 0.4rem;
+                line-height: 1.3;
+            }
+
+            .contact-item {
+                display: inline-block;
+                margin: 0 8px;
+                white-space: nowrap;
+            }
+
+            .contact-separator {
+                color: #ccc;
+                margin: 0 4px;
+            }
+
+            /* Section Styling - Optimized spacing */
+            .section {
+                margin-bottom: 0.65rem;
+                page-break-inside: auto;
+            }
+
+            .section-title {
+                font-size: 11.5pt;
+                font-weight: bold;
+                border-bottom: 1.5px solid #1a1a1a;
+                padding-bottom: 0.12rem;
+                margin-bottom: 0.4rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                page-break-after: avoid;
+            }
+
+            /* Subsection Styling - Allow page breaks */
+            .subsection {
+                margin-bottom: 0.5rem;
+                page-break-inside: auto;
+            }
+
+            .subsection:last-child {
+                margin-bottom: 0.3rem;
+            }
+
+            .subsection-header {
+                margin-bottom: 0.25rem;
+            }
+
+            .subsection-title {
+                font-weight: bold;
+                font-size: 10.5pt;
+                color: #1a1a1a;
+                display: inline;
+            }
+
+            .subsection-date {
+                font-size: 9pt;
+                color: #666;
+                font-weight: normal;
+                float: right;
+            }
+
+            /* Clear float */
+            .subsection-header::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            /* Bold and Italic text from markdown */
+            strong,
+            b {
+                font-weight: bold;
+            }
+
+            em,
+            i {
+                font-style: italic;
+            }
+
+            /* Paragraphs - Compact spacing */
+            .content-paragraph {
+                margin-bottom: 0.25rem;
+                text-align: justify;
+                line-height: 1.32;
+                orphans: 2;
+                widows: 2;
+            }
+
+            /* Lists - Optimized spacing with orphan/widow control */
+            .bullet-list {
+                padding-left: 1rem;
+                margin-top: 0.15rem;
+                margin-bottom: 0.25rem;
+                list-style-type: disc;
+            }
+
+            .bullet-item {
+                margin-bottom: 0.12rem;
+                line-height: 1.28;
+                orphans: 2;
+                widows: 2;
+            }
+
+            .bullet-item:last-child {
+                margin-bottom: 0;
+            }
+
+            /* Fallback Experience Sections */
+            .item-header {
+                margin-bottom: 0.15rem;
+            }
+
+            .company-name {
+                font-weight: bold;
+                font-size: 10.5pt;
+                display: inline;
+            }
+
+            .date {
+                color: #666;
+                font-weight: normal;
+                font-size: 9pt;
+                float: right;
+            }
+
+            .item-sub {
+                font-style: italic;
+                color: #444;
+                margin-bottom: 0.3rem;
+                font-size: 10pt;
+            }
+
+            /* Skills Grid - Compact */
+            .skills-container {
+                margin-top: 0.2rem;
+            }
+
+            .skills-column {
+                margin-bottom: 0.3rem;
+            }
+
+            .skill-label {
+                font-weight: bold;
+                display: inline;
+                margin-right: 0.3rem;
+            }
+
+            .skill-items {
+                display: inline;
+                line-height: 1.28;
+            }
+
+            /* Orphan and widow control for better page breaks */
+            p,
+            ul,
+            ol,
+            div {
+                orphans: 2;
+                widows: 2;
+            }
+
+            /* Prefer breaking before subsection headers */
+            .subsection-header {
+                page-break-after: avoid;
+            }
+
+            /* Keep bullet lists together when possible */
+            .bullet-list {
+                page-break-inside: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <!-- Header with Contact Info -->
+        <div class="header">
+            <div class="name">{{ personal_info.name }}</div>
+            <div class="title">{{ personal_info.title }}</div>
+            <div class="contact-info">
+                {% if personal_info.email %}
+                <span class="contact-item">✉ {{ personal_info.email }}</span>
+                {% endif %} {% if personal_info.phone %}
+                <span class="contact-separator">|</span>
+                <span class="contact-item">☎ {{ personal_info.phone }}</span>
+                {% endif %} {% if personal_info.location %}
+                <span class="contact-separator">|</span>
+                <span class="contact-item"
+                    >📍 {{ personal_info.location }}</span
+                >
+                {% endif %} {% if personal_info.linkedin %}
+                <br />
+                <span class="contact-item"
+                    >🔗 {{ personal_info.linkedin }}</span
+                >
+                {% endif %} {% if personal_info.website %}
+                <span class="contact-separator">|</span>
+                <span class="contact-item">🌐 {{ personal_info.website }}</span>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Professional Summary (from personal_info) -->
+        {% if personal_info.summary %}
+        <div class="section">
+            <div class="section-title">Professional Summary</div>
+            <p class="content-paragraph">{{ personal_info.summary }}</p>
+        </div>
+        {% endif %}
+
+        <!-- Dynamic Sections from Structured Parser -->
+        {% if sections %} {% for section in sections.sections %} {% if
+        section.title.lower() != 'professional summary' and
+        section.title.lower() != 'software developer' and section.title.lower()
+        != 'software engineer' and section.title.lower() != 'full stack
+        developer' and section.title.lower() != 'full stack engineer' and
+        section.title.lower() != 'contact information' %}
+        <div class="section">
+            <div class="section-title">{{ section.title }}</div>
+
+            <!-- Section-level paragraphs (if no subsections) -->
+            {% if section.paragraphs %} {% for paragraph in section.paragraphs
+            %}
+            <p class="content-paragraph">{{ paragraph | safe }}</p>
+            {% endfor %} {% endif %}
+
+            <!-- Section-level bullets (if no subsections) -->
+            {% if section.bullets %}
+            <ul class="bullet-list">
+                {% for bullet in section.bullets %}
+                <li class="bullet-item">{{ bullet | safe }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <!-- Subsections -->
+            {% if section.subsections %} {% for subsection in
+            section.subsections %}
+            <div class="subsection">
+                <div class="subsection-header">
+                    <span class="subsection-title">{{ subsection.title }}</span>
+                    {% if subsection.date %}
+                    <span class="subsection-date">{{ subsection.date }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Subsection paragraphs -->
+                {% if subsection.paragraphs %} {% for paragraph in
+                subsection.paragraphs %}
+                <p class="content-paragraph">{{ paragraph | safe }}</p>
+                {% endfor %} {% endif %}
+
+                <!-- Subsection bullets -->
+                {% if subsection.bullets %}
+                <ul class="bullet-list">
+                    {% for bullet in subsection.bullets %}
+                    <li class="bullet-item">{{ bullet | safe }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %} {% endif %}
+        </div>
+        {% endif %} {% endfor %} {% endif %}
+
+        <!-- Fallback: If no structured sections, use traditional format -->
+        {% if not sections %}
+
+        <!-- Experience Section -->
+        {% if experience %}
+        <div class="section">
+            <div class="section-title">Experience</div>
+            {% for exp in experience %}
+            <div class="subsection">
+                <div class="item-header">
+                    <span class="company-name"
+                        >{{ exp.company }} - {{ exp.role }}</span
+                    >
+                    <span class="date">{{ exp.period }}</span>
+                </div>
+                {% if exp.description %}
+                <ul class="bullet-list">
+                    {% for bullet in exp.description %}
+                    <li class="bullet-item">{{ bullet }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Skills Section -->
+        {% if skills %}
+        <div class="section">
+            <div class="section-title">Technical Skills</div>
+            <div class="skills-container">
+                {% if skills.languages %}
+                <div class="skills-column">
+                    <span class="skill-label">Languages & Frameworks:</span>
+                    <div class="skill-items">{{ skills.languages }}</div>
+                </div>
+                {% endif %} {% if skills.tools %}
+                <div class="skills-column">
+                    <span class="skill-label">Tools & Platforms:</span>
+                    <div class="skill-items">{{ skills.tools }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Education Section -->
+        {% if education %}
+        <div class="section">
+            <div class="section-title">Education</div>
+            <div class="item-header">
+                <span class="company-name">{{ education.degree }}</span>
+                <span class="date">{{ education.period }}</span>
+            </div>
+            <div>{{ education.school }}</div>
+        </div>
+        {% endif %}
+
+        <!-- Certifications Section -->
+        {% if certifications %}
+        <div class="section">
+            <div class="section-title">Certifications</div>
+            <ul class="bullet-list">
+                {% for cert in certifications %}
+                <li class="bullet-item">{{ cert }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %} {% endif %}
+    </body>
+</html>
