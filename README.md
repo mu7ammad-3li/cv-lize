@@ -22,6 +22,7 @@ Transform your resume with cutting-edge AI technology. Get instant analysis, ATS
 
 ## 📑 Table of Contents
 
+- [What's New](#-whats-new)
 - [Features](#-features)
 - [Demo](#-demo)
 - [Architecture](#%EF%B8%8F-architecture)
@@ -34,9 +35,50 @@ Transform your resume with cutting-edge AI technology. Get instant analysis, ATS
 - [API Documentation](#-api-documentation)
 - [Security](#-security)
 - [Deployment](#-deployment)
+- [Documentation](#-documentation)
 - [Contributing](#-contributing)
 - [License](#-license)
 - [Contact](#-contact)
+
+---
+
+## 🆕 What's New
+
+### Version 1.0.0 - Latest Updates
+
+**🎯 ATS Optimization**
+- Advanced keyword extraction and density analysis
+- ATS compatibility validation (95%+ scores)
+- Job description keyword matching
+- STAR methodology for experience bullets
+
+**📄 Multiple Export Formats**
+- Markdown download (optimized content)
+- PDF generation (ATS-friendly templates)
+- DOCX generation (editable Word documents)
+- RenderCV integration for professional templates
+
+**🔍 Enhanced Analysis**
+- Keyword matching visualization
+- Dynamic section filtering based on job description
+- Improved strengths/weaknesses analysis
+- Actionable suggestions with specific improvements
+
+**🛠️ New Backend Services**
+- `ats_validator.py` - ATS compatibility checking
+- `keyword_analyzer.py` - Advanced keyword analysis
+- `docx_generator.py` - DOCX file generation
+- `section_filter.py` - Smart section filtering
+- `rendercv_generator.py` - Professional template rendering
+
+**📚 Documentation**
+- Comprehensive setup guides in `docs/setup/`
+- ATS implementation guides
+- API documentation
+- Project status tracking
+- Migration guides for RenderCV
+
+**See full changelog**: [CHANGELOG.md](./CHANGELOG.md)
 
 ---
 
@@ -48,11 +90,13 @@ Transform your resume with cutting-edge AI technology. Get instant analysis, ATS
 
 ### 🎯 Core Features
 - **Multi-Format Support**: Upload CVs in PDF, Markdown, or Text
-- **AI-Powered Analysis**: Powered by Google Gemini & OpenRouter
-- **ATS Optimization**: 95%+ ATS compatibility score
+- **AI-Powered Analysis**: Powered by OpenRouter AI (NVIDIA Nemotron)
+- **ATS Optimization**: 95%+ ATS compatibility score with keyword analysis
 - **Real-time Preview**: Professional resume template with live preview
 - **Instant Results**: Get optimized CV in under 30 seconds
-- **Export Options**: Download as Markdown or PDF
+- **Export Options**: Download as Markdown, PDF, or DOCX
+- **Keyword Matching**: Advanced keyword extraction and density analysis
+- **Dynamic Sections**: Filter CV sections based on job description
 
 </td>
 <td width="50%">
@@ -73,10 +117,42 @@ Transform your resume with cutting-edge AI technology. Get instant analysis, ATS
 
 ## 🎬 Demo
 
-### Upload Interface
-Upload your CV and optionally paste a job description for tailored optimization.
+### Screenshots
 
-![Upload Interface](./docs/images/screenshot.png)
+<table>
+<tr>
+<td width="50%">
+
+**Upload Interface**
+
+![Upload Interface](./docs/screenshots/cv-lize-upload-interface.png)
+
+</td>
+<td width="50%">
+
+**ATS Scoring**
+
+![ATS Scoring](./docs/screenshots/cv-lize-ats-scoring.png)
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+**Analysis View**
+
+![Analysis View](./docs/screenshots/cv-lize-analysis-view.png)
+
+</td>
+<td width="50%">
+
+**Full Results**
+
+![Full Results](./docs/screenshots/cv-lize-full-analysis-result.png)
+
+</td>
+</tr>
+</table>
 
 ### Key Capabilities
 
@@ -85,7 +161,9 @@ Upload your CV and optionally paste a job description for tailored optimization.
 - **📊 ATS Scoring**: Detailed compatibility metrics for Applicant Tracking Systems
 - **✨ Professional Templates**: Clean, ATS-friendly resume designs
 - **🎨 Live Preview**: Real-time preview of optimized resume
-- **💾 Multiple Formats**: Download as Markdown or PDF
+- **💾 Multiple Formats**: Download as Markdown, PDF, or DOCX
+- **🔍 Keyword Analysis**: Match job description keywords with CV content
+- **⚡ Dynamic Filtering**: Show/hide CV sections based on relevance
 
 ---
 
@@ -138,7 +216,8 @@ graph TB
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white)
 
 ### AI & ML
-![Google](https://img.shields.io/badge/Gemini-AI-4285F4?style=for-the-badge&logo=google&logoColor=white)
+![OpenRouter](https://img.shields.io/badge/OpenRouter-AI-000000?style=for-the-badge&logo=openai&logoColor=white)
+![NVIDIA](https://img.shields.io/badge/NVIDIA-Nemotron-76B900?style=for-the-badge&logo=nvidia&logoColor=white)
 ![spaCy](https://img.shields.io/badge/spaCy-NLP-09A3D5?style=for-the-badge&logo=spacy&logoColor=white)
 
 </div>
@@ -155,6 +234,7 @@ Before you begin, ensure you have the following installed:
 - **Node.js 18+** ([Download](https://nodejs.org/))
 - **MongoDB Atlas Account** ([Sign Up](https://www.mongodb.com/cloud/atlas) - Free M0 tier)
 - **OpenRouter API Key** ([Get Key](https://openrouter.ai/) - Free tier available)
+- **Optional**: Google Gemini API Key ([Get Key](https://ai.google.dev/) - Alternative AI provider)
 
 ### Backend Setup
 
@@ -177,7 +257,7 @@ source venv/bin/activate
 
 3. **Install dependencies**
 ```bash
-pip install -r requirements.txt
+    pip install -r requirements.txt
 ```
 
 4. **Download spaCy model**
@@ -278,16 +358,23 @@ cv-lize/
 │   ├── .env                         # Environment variables (create this)
 │   ├── .env.example                 # Environment template
 │   ├── Dockerfile                   # Docker configuration
+│   ├── API_DOCUMENTATION.md         # API documentation
 │   ├── 📂 routes/                   # API endpoints
 │   │   ├── upload.py               # CV upload endpoint
 │   │   ├── analyze.py              # AI analysis endpoint
-│   │   └── download.py             # Download endpoints
+│   │   └── download.py             # Download endpoints (MD, PDF, DOCX)
 │   ├── 📂 services/                 # Business logic
 │   │   ├── nlp_processor.py        # spaCy CV parsing
-│   │   ├── gemini_service.py       # Google Gemini AI
-│   │   ├── openrouter_service.py   # OpenRouter AI
+│   │   ├── gemini_service.py       # Google Gemini AI (optional)
+│   │   ├── openrouter_service.py   # OpenRouter AI (primary)
+│   │   ├── ats_validator.py        # ATS compatibility validation
+│   │   ├── keyword_analyzer.py     # Keyword extraction & analysis
+│   │   ├── section_filter.py       # Dynamic section filtering
 │   │   ├── markdown_parser.py      # Markdown processing
-│   │   └── pdf_generator.py        # PDF generation
+│   │   ├── pdf_generator.py        # PDF generation
+│   │   ├── docx_generator.py       # DOCX generation
+│   │   ├── rendercv_generator.py   # RenderCV integration
+│   │   └── rendercv_transformer.py # CV data transformation
 │   ├── 📂 models/                   # Data models
 │   │   ├── schemas.py              # Pydantic schemas
 │   │   └── database.py             # MongoDB connection
@@ -318,16 +405,41 @@ cv-lize/
 │   ├── tailwind.config.js          # Tailwind configuration
 │   └── tsconfig.json               # TypeScript configuration
 ├── 📂 docs/                        # Documentation
-│   ├── 📂 images/                  # Screenshots & images
-│   │   └── screenshot.png
-│   ├── API.md                      # API documentation
-│   ├── DEPLOYMENT.md               # Deployment guides
-│   ├── FREE_DEPLOYMENT.md          # Free deployment options
-│   └── AWS_DEPLOYMENT.md           # AWS deployment guide
+│   ├── 📂 images/                  # Main images
+│   │   └── screenshot.png          # Hero screenshot
+│   ├── 📂 screenshots/             # Application screenshots
+│   │   ├── cv-lize-upload-interface.png
+│   │   ├── cv-lize-ats-scoring.png
+│   │   ├── cv-lize-analysis-view.png
+│   │   └── cv-lize-full-analysis-result.png
+│   ├── 📂 setup/                   # Setup guides
+│   │   ├── INSTALLATION_GUIDE.md   # Installation instructions
+│   │   ├── SETUP.md                # Quick setup guide
+│   │   ├── DEPLOYMENT.md           # Deployment guides
+│   │   ├── FREE_DEPLOYMENT.md      # Free deployment options
+│   │   ├── AWS_DEPLOYMENT.md       # AWS deployment guide
+│   │   ├── GIT_SETUP.md            # Git configuration
+│   │   └── GITIGNORE_GUIDE.md      # Gitignore documentation
+│   ├── 📂 project-status/          # Project status documents
+│   │   ├── PROJECT_COMPLETE.md     # Project completion status
+│   │   ├── BACKEND_COMPLETE.md     # Backend completion status
+│   │   ├── IMPLEMENTATION_STATUS.md # Implementation details
+│   │   ├── TESTING_COMPLETE.md     # Testing status
+│   │   ├── STATUS.md               # Overall status
+│   │   └── SYSTEM_STATUS.md        # System status
+│   ├── 📂 development/             # Development docs
+│   │   └── ATS_SYSTEM_PROMPT.md    # ATS optimization prompts
+│   ├── 📂 migration/               # Migration guides
+│   │   └── RENDERCV_MIGRATION.md   # RenderCV migration
+│   ├── ATS_IMPLEMENTATION.md       # ATS feature implementation
+│   ├── ATS_RECOMMENDATIONS.md      # ATS best practices
+│   ├── DYNAMIC_SECTIONS_FEATURE.md # Dynamic sections feature
+│   ├── INTEGRATION_GUIDE.md        # Integration documentation
+│   └── CHANGELOG.md                # Project changelog
 ├── .gitignore                      # Git ignore rules
+├── CHANGELOG.md                    # Changelog (root copy)
 ├── README.md                       # This file
-├── LICENSE                         # MIT License
-└── GITIGNORE_GUIDE.md             # Gitignore documentation
+└── LICENSE                         # MIT License
 ```
 
 ---
@@ -506,9 +618,47 @@ VITE_API_URL=https://your-backend.render.com
 ```
 
 For detailed deployment instructions, see:
-- [Free Deployment Guide](./docs/FREE_DEPLOYMENT.md) - Vercel + Render (100% Free)
-- [AWS Deployment Guide](./docs/AWS_DEPLOYMENT.md) - AWS Free Tier
-- [General Deployment](./docs/DEPLOYMENT.md) - All options
+- [Free Deployment Guide](./docs/setup/FREE_DEPLOYMENT.md) - Vercel + Render (100% Free)
+- [AWS Deployment Guide](./docs/setup/AWS_DEPLOYMENT.md) - AWS Free Tier
+- [General Deployment](./docs/setup/DEPLOYMENT.md) - All options
+
+---
+
+## 📚 Documentation
+
+Comprehensive documentation is available in the `docs/` directory:
+
+### Setup & Installation
+- [Installation Guide](./docs/setup/INSTALLATION_GUIDE.md) - Detailed installation instructions
+- [Quick Setup](./docs/setup/SETUP.md) - Fast setup guide
+- [Git Setup](./docs/setup/GIT_SETUP.md) - Git configuration
+- [Gitignore Guide](./docs/setup/GITIGNORE_GUIDE.md) - Git ignore patterns
+
+### Deployment
+- [Free Deployment](./docs/setup/FREE_DEPLOYMENT.md) - Deploy for free (Vercel + Render)
+- [AWS Deployment](./docs/setup/AWS_DEPLOYMENT.md) - AWS EC2 + MongoDB Atlas
+- [General Deployment](./docs/setup/DEPLOYMENT.md) - All deployment options
+
+### Features & Implementation
+- [ATS Implementation](./docs/ATS_IMPLEMENTATION.md) - ATS optimization features
+- [ATS Recommendations](./docs/ATS_RECOMMENDATIONS.md) - ATS best practices
+- [Dynamic Sections](./docs/DYNAMIC_SECTIONS_FEATURE.md) - Dynamic section filtering
+- [Integration Guide](./docs/INTEGRATION_GUIDE.md) - Integration documentation
+- [API Documentation](./backend/API_DOCUMENTATION.md) - Backend API reference
+
+### Development
+- [ATS System Prompt](./docs/development/ATS_SYSTEM_PROMPT.md) - AI optimization prompts
+- [RenderCV Migration](./docs/migration/RENDERCV_MIGRATION.md) - RenderCV integration guide
+
+### Project Status
+- [Project Complete](./docs/project-status/PROJECT_COMPLETE.md) - Overall completion status
+- [Backend Complete](./docs/project-status/BACKEND_COMPLETE.md) - Backend status
+- [Implementation Status](./docs/project-status/IMPLEMENTATION_STATUS.md) - Feature implementation
+- [Testing Complete](./docs/project-status/TESTING_COMPLETE.md) - Testing status
+- [System Status](./docs/project-status/SYSTEM_STATUS.md) - System overview
+
+### Changelog
+- [CHANGELOG.md](./CHANGELOG.md) - Version history and changes
 
 ---
 
@@ -562,9 +712,11 @@ Distributed under the MIT License. See `LICENSE` for more information.
 - [React](https://react.dev/) - UI library
 - [shadcn/ui](https://ui.shadcn.com/) - Beautiful component library
 - [spaCy](https://spacy.io/) - Advanced NLP
-- [Google Gemini](https://ai.google.dev/) - AI analysis
-- [OpenRouter](https://openrouter.ai/) - AI gateway
+- [OpenRouter](https://openrouter.ai/) - AI gateway and API
+- [NVIDIA Nemotron](https://www.nvidia.com/) - AI language model
+- [Google Gemini](https://ai.google.dev/) - Alternative AI analysis
 - [MongoDB Atlas](https://www.mongodb.com/atlas) - Cloud database
+- [RenderCV](https://github.com/sinaatalay/rendercv) - Professional CV templates
 - [Vercel](https://vercel.com/) - Frontend deployment
 - [Render](https://render.com/) - Backend deployment
 
