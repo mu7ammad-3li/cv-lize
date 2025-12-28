@@ -8,9 +8,8 @@ from datetime import datetime, timedelta
 
 from fastapi import APIRouter, File, HTTPException, Request, UploadFile
 from fastapi.responses import JSONResponse
-
 from middleware.rate_limit import limiter
-from models.database import check_duplicate_file, create_cv_session
+from models.database import create_cv_session
 from models.schemas import FileType, UploadResponse
 from services.nlp_processor import cv_parser
 from utils.file_handler import (
@@ -63,17 +62,8 @@ async def upload_cv(request: Request, file: UploadFile = File(...)):
     # Calculate file hash
     file_hash = calculate_file_hash(content)
 
-    # Check for duplicate file
-    existing_session = await check_duplicate_file(file_hash)
-    if existing_session:
-        # Return existing session data
-        return UploadResponse(
-            session_id=existing_session["session_id"],
-            filename=existing_session["original_filename"],
-            file_hash=file_hash,
-            extracted_text=existing_session["extracted_text"][:500] + "...",
-            parsed_data=existing_session.get("parsed_data", {}),
-        )
+    # Note: We no longer check for duplicate files - each upload creates a new session
+    # This allows users to upload the same file multiple times and track different analyses
 
     # PDF security validation
     if file_type == "pdf":

@@ -14,6 +14,7 @@ from models.schemas import (
     ParsedCVData,
     ParsedResumeData,
 )
+from services.keyword_analyzer import keyword_analyzer
 from services.markdown_parser import markdown_parser
 from services.openrouter_service import openrouter_analyzer
 
@@ -96,6 +97,29 @@ async def analyze_cv(request: Request, analyze_request: AnalyzeRequest):
         print(f"❌ OpenRouter API error: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to analyze CV: {str(e)}")
 
+    # Perform keyword analysis
+    keyword_analysis_list = []
+    missing_keywords_list = []
+    semantic_similarity = 0.0
+
+    try:
+        print(f"🔍 Performing keyword analysis...")
+        keyword_analysis_list = keyword_analyzer.analyze_keywords(
+            cv_text, analyze_request.job_description
+        )
+        missing_keywords_list = keyword_analyzer.find_missing_keywords(
+            cv_text, analyze_request.job_description
+        )
+        semantic_similarity = keyword_analyzer.calculate_semantic_similarity(
+            cv_text, analyze_request.job_description
+        )
+
+        print(f"   Found {len(keyword_analysis_list)} keywords in resume")
+        print(f"   Missing {len(missing_keywords_list)} critical keywords from JD")
+        print(f"   Semantic similarity: {semantic_similarity:.2f}")
+    except Exception as e:
+        print(f"⚠️  Warning: Keyword analysis failed: {e}")
+
     # Parse result
     try:
         analysis = CVAnalysis(
@@ -105,6 +129,12 @@ async def analyze_cv(request: Request, analyze_request: AnalyzeRequest):
             suggestions=result.get("suggestions", []),
             ats_compatibility=result.get("atsCompatibility", 75),
             match_percentage=result.get("matchPercentage", 60),
+            missing_keywords=result.get("missing_keywords", missing_keywords_list),
+            keyword_analysis=result.get("keyword_analysis", keyword_analysis_list),
+            formatting_issues=result.get("formatting_issues", []),
+            semantic_similarity_score=result.get(
+                "semantic_similarity_score", semantic_similarity
+            ),
         )
 
         markdown_cv = result.get("optimizedCV", "# Optimized CV\n\nGeneration failed.")
